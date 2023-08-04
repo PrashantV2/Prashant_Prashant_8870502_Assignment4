@@ -13,4 +13,61 @@ using OpenQA.Selenium.Interactions;
 using NUnit.Framework;
 using static System.Net.WebRequestMethods;
 
+[TestFixture]
+public class DefaultSuiteTest
+{
+    private IWebDriver driver;
+    public IDictionary<string, object> vars { get; private set; }
+    private IJavaScriptExecutor js;
+    [SetUp]
+    public void SetUp()
+    {
+        driver = new ChromeDriver();
+        js = (IJavaScriptExecutor)driver;
+        vars = new Dictionary<string, object>();
+    }
+    [TearDown]
+    protected void TearDown()
+    {
+        driver.Quit();
+    }
+
+    string base_url = "http://localhost/prog8170a04/getQuote.html";
+    [Test]
+    public void insuranceQuote01_AllValidFieldData_Age25DrivingExperience3Accident0()
+    {
+        //Arrange
+        driver.Navigate().GoToUrl(base_url);
+        driver.Manage().Window.Size = new System.Drawing.Size(1002, 661);
+        //Act
+        driver.FindElement(By.Id("firstName")).Click();
+        driver.FindElement(By.Id("firstName")).SendKeys("john");
+        driver.FindElement(By.Id("lastName")).Click();
+        driver.FindElement(By.Id("lastName")).SendKeys("con");
+        driver.FindElement(By.Id("address")).Click();
+        driver.FindElement(By.Id("address")).SendKeys("107 king street");
+        driver.FindElement(By.Id("city")).Click();
+        driver.FindElement(By.Id("city")).SendKeys("waterloo");
+        driver.FindElement(By.Id("postalCode")).Click();
+        driver.FindElement(By.Id("postalCode")).SendKeys("N2J 3Y9");
+        driver.FindElement(By.Id("phone")).Click();
+        driver.FindElement(By.Id("phone")).SendKeys("123-123-1234");
+        driver.FindElement(By.Id("email")).Click();
+        driver.FindElement(By.Id("email")).SendKeys("JOHNCOLLY@GMAIL.COM");
+        driver.FindElement(By.Id("age")).Click();
+        driver.FindElement(By.Id("age")).SendKeys("25");
+        driver.FindElement(By.Id("experience")).Click();
+        driver.FindElement(By.Id("accidents")).Click();
+        driver.FindElement(By.Id("experience")).Click();
+        driver.FindElement(By.Id("experience")).SendKeys("3");
+        driver.FindElement(By.Id("accidents")).Click();
+        driver.FindElement(By.Id("accidents")).SendKeys("0");
+        driver.FindElement(By.Id("btnSubmit")).Click();
+        //Assert
+        {
+            string value = driver.FindElement(By.Id("finalQuote")).GetAttribute("value");
+            Assert.That(value, Is.EqualTo("$4500"));
+        }
+    }
+
 }
